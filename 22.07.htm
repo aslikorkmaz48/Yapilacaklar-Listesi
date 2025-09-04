@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yapılacaklar Listesi 🌼</title>
+    <style>
+            body {
+            .container {
+                max-width: 600px;
+                margin: 60px auto;
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 20px;
+                padding: 30px;
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+            h1 {
+                text-align: center;
+                color: #ff69b4;
+            }
+            .input-group {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            input[type="text"] {
+                flex: 1;
+                padding: 10px;
+                border: 2px solid #ffb6c1;
+                border-radius: 10px;
+                font-size: 16px;
+            }
+            button {
+                background-color: #ff69b4;
+                border: none;
+                padding: 10px 20px;
+                color: white;
+                font-weight: bold;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: background 0.3s ease;
+            }
+            button:hover {
+                background-color: #ff1493;
+            }
+            .todo-list {
+                list-style: none;
+                padding: 0;
+            }
+            .todo-item {
+                display: flex;
+                align-items: center;
+                background-color: #fff0f5;
+                border: 1px solid #ffb6c1;
+                border-radius: 12px;
+                margin-bottom: 12px;
+                padding: 10px;
+                gap: 12px;
+                box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+            }
+            .todo-item img {
+                width: 40px;
+                height: 40px;
+            }
+            .todo-text {
+                flex-grow: 1;
+                font-size: 18px;
+            }
+            .delete-btn {
+                background: #ff4d4d;
+                border: none;
+                padding: 6px 10px;
+                color: white;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+            .delete-btn:hover {
+                background: #e60000;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🌸 Yapılacaklar Listem 🐞</h1>
+        <div class="input-group">
+            <input type="text" id="todoInput" placeholder="Bugün ne yapacaksın? 📝" />
+            <button onclick="addTodo()">Ekle ➕</button>
+        </div>
+        <ul id="todoList" class="todo-list"></ul>
+    </div>
+
+    <script>
+        const todoInput = document.getElementById("todoInput");
+        const todoList = document.getElementById("todoList");
+
+        // Çiçekli-böcekli ikonlar listesi
+        const icons = [
+            "https://img.icons8.com/emoji/48/flower-emoji.png",
+            "https://img.icons8.com/emoji/48/sunflower.png",
+            "https://img.icons8.com/emoji/48/lady-beetle.png",
+            "https://img.icons8.com/emoji/48/butterfly.png",
+            "https://img.icons8.com/emoji/48/seedling.png",
+            "https://img.icons8.com/emoji/48/sun-with-face.png"
+        ];
+
+        // localStorage'dan verileri yükle
+        window.onload = function() {
+            const saved = JSON.parse(localStorage.getItem("todos")) || [];
+            saved.forEach(item => createTodo(item.text, item.icon));
+        };
+
+        function addTodo() {
+            const text = todoInput.value.trim();
+            if (text === "") return;
+
+            const icon = icons[Math.floor(Math.random() * icons.length)];
+            createTodo(text, icon);
+            saveTodo(text, icon);
+
+            todoInput.value = "";
+        }
+
+        function createTodo(text, icon) {
+            const li = document.createElement("li");
+            li.className = "todo-item";
+
+            const img = document.createElement("img");
+            img.src = icon;
+
+            const span = document.createElement("span");
+            span.className = "todo-text";
+            span.textContent = text;
+
+            const del = document.createElement("button");
+            del.textContent = "Sil";
+            del.className = "delete-btn";
+            del.onclick = () => {
+                li.remove();
+                removeTodo(text);
+            };
+
+            li.appendChild(img);
+            li.appendChild(span);
+            li.appendChild(del);
+
+            todoList.appendChild(li);
+        }
+
+        function saveTodo(text, icon) {
+            const todos = JSON.parse(localStorage.getItem("todos")) || [];
+            todos.push({
+                text,
+                icon
+            });
+            localStorage.setItem("todos", JSON.stringify(todos));
+        }
+
+        function removeTodo(text) {
+            let todos = JSON.parse(localStorage.getItem("todos")) || [];
+            todos = todos.filter(item => item.text !== text);
+            localStorage.setItem("todos", JSON.stringify(todos));
+        }
+    </script>
+</body>
+
+</html>
